@@ -7,22 +7,24 @@ set -e
 
 # Setup
 if [[ -z "$1" ]]; then
-	echo "INSTALL_KUBE: No mode specified"
+	echo "INSTALL_K3S: No mode specified"
 	exit 1;
 fi
 
+sudo rm -rf /vagrant_shared/*
 UFW_STATUS="$(sudo ufw status)"
 if echo "$UFW_STATUS" | grep -q "Status: active"; then
-	echo "INSTALL_KUBE: Disabling UFW"
+	echo "INSTALL_K3S: Disabling UFW"
 	sudo ufw disable
 fi
 
 # K3s
 MODE="$1"
 AGENT_SLEEP=0
+SERVER_IP="192.168.56.110"
 if  [ "$MODE" = "server" ]; then
 	echo "INSTALL_K3S: Installing k3s server"
-	sudo curl -sfL https://get.k3s.io |INSTALL_K3S_SKIP_START=true sh -;
+	sudo curl -sfL https://get.k3s.io |INSTALL_K3S_SKIP_START=true sh -s - --node-ip=$SERVER_IP --advertise-address=$SERVER_IP
 	sudo systemctl enable k3s
 	sudo systemctl start k3s
 	mkdir -p /vagrant_shared
@@ -34,28 +36,29 @@ if  [ "$MODE" = "server" ]; then
 	sudo cat /vagrant_shared/node-token
 elif [ "$MODE" = "agent" ]; then
 	for i in {1..30}; do
-		if mount | grep -q "/vagrant"; then
+		if mount | grep -q "/vagrant_shared"; then
 			break
 		fi
-		echo "INSTALL_KUBE: Waiting for /vagrant to be mounted..."
+		echo "INSTALL_K3S: Waiting for /vagrant_shared to be mounted..."
 		sleep 1
 	done
-	echo "INSTALL_KUBE: Installing k3s agent"
+	echo "INSTALL_K3S: Installing k3s agent"
 	for i in {1..1000}; do
 		if [ -f /vagrant_shared/node-token ]; then
 			break
 		fi
-		echo "INSTALL_KUBE: Waiting for node-token..."
+		echo "INSTALL_K3S: Waiting for node-token..."
 		sleep 2
 	done
 	if [ ! -f /vagrant_shared/node-token ]; then
-		echo "INSTALL_KUBE: Timeout waiting for server token"
+		echo "INSTALL_K3S: Timeout waiting for server token"
 		exit 1
 	fi
-	export K3S_URL=https://192.168.56.110:6443
-	export K3S_TOKEN=$(cat /vagrant/node-token)
-	sudo curl -sfL https://get.k3s.io | sh - ;
+	echo "INSTALL_K3S: Found token, installing"
+	export K3S_URL=https://$SERVER_IP:6443
+	export K3S_TOKEN=$(cat /vagrant_shared/node-token)
+	sudo curl -sfL https://get.k3s.io | sh -s - --node-ip=192.168.56.111 
 else
-	echo "INSTALL_KUBE: Unrecognized installation mode: $MODE"
+	echo "INSTALL_K3S: Unrecognized installation mode: $MODE"
 	exit 1;
 fi
