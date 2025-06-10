@@ -14,13 +14,13 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.define "jteissieS" do |jteissieS|
-    jteissieS.vm.box = "centos/7"
+    jteissieS.vm.box = "generic/ubuntu1804"
     jteissieS.vm.hostname = "jteissieS"
     jteissieS.vm.network "public_network", ip: "192.168.56.110", hostname: true
   end
 
   config.vm.define "jteissieSW" do |jteissieSW|
-    jteissieSW.vm.box = "centos/7"
+    jteissieSW.vm.box = "generic/ubuntu1804"
     jteissieSW.vm.hostname = "jteissieSW"
     jteissieSW.vm.network "public_network", ip: "192.168.56.111", hostname: true
   end
