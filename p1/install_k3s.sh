@@ -33,28 +33,28 @@ elif [ "$MODE" = "agent" ]; then
 		if mount | grep -q "/vagrant_shared"; then
 			break
 		fi
-		echo "SERVER:INSTALL_K3S: Waiting for /vagrant_shared to be mounted..."
+		echo "AGENT:INSTALL_K3S: Waiting for /vagrant_shared to be mounted..."
 		sleep 1
 	done
-	echo "SERVER:INSTALL_K3S: Installing k3s agent"
+	echo "AGENT:INSTALL_K3S: Installing k3s agent"
 	for i in {1..100}; do
 		if [ -f /vagrant_shared/node-token ]; then
 			break
 		fi
-		echo "SERVER:INSTALL_K3S: Waiting for node-token..."
+		echo "AGENT:INSTALL_K3S: Waiting for node-token..."
 		sleep 2
 	done
 	if [ ! -f /vagrant_shared/node-token ]; then
-		echo "SERVER:INSTALL_K3S: Timeout waiting for server token"
+		echo "AGENT:INSTALL_K3S: Timeout waiting for server token"
 		exit 1
 	fi
-	echo "SERVER:INSTALL_K3S: Found token, installing"
+	echo "AGENT:INSTALL_K3S: Found token, installing"
 	export K3S_URL=https://$SERVER_IP:6443
 	export K3S_TOKEN=$(cat /vagrant_shared/node-token)
 	sudo rm -rf /vagrant_shared/*
 	sudo curl -sfL https://get.k3s.io | sh -s - --node-ip=192.168.56.111 
-	echo "SERVER:INSTALL_K3S: Done!"
+	echo "AGENT:INSTALL_K3S: Done!"
 else
-	echo "SERVER:INSTALL_K3S: Unrecognized installation mode: $MODE"
+	echo "INSTALL_K3S: Unrecognized installation mode: $MODE"
 	exit 1;
 fi
