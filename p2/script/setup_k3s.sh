@@ -5,10 +5,13 @@ set -e
 echo "SETUP_K3S: Disabling ufw..."
 sudo ufw disable
 
+sudo apt update
+sudo apt upgrade -y
 sudo apt install w3m -y
+sudo apt install xauth x11-apps -y
 
-echo "SETUP_K3S: Installing k3s..."
-curl -sfL https://get.k3s.io | sh -s
+echo "SETUP_K3S: Installing k3s from GitHub install script..."
+curl -vfL https://raw.githubusercontent.com/k3s-io/k3s/master/install.sh | sh -so 
 echo "SETUP_K3S: Installed k3s"
 echo "SETUP_K3S: Creating p2 namespace"
 sudo kubectl create namespace p2
