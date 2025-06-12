@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: helloworld
+  namespace: p2
 spec:
   selector:
     matchLabels:
@@ -14,6 +15,22 @@ spec:
     spec:
       containers:
       - name: helloworld
-        image: karthequian/helloworld:latest
+        image: paulbouwer/hello-kubernetes:1
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+          name: web
+          protocol: TCP
+        env:
+          - name: MESSAGE
+            value: "Hello from app1"
+          - name: PORT
+            value: "8080"
+            #        readinessProbe:
+            #          httpGet:
+            #            path: /
+            #            port: web
+            #        livenessProbe:
+            #          httpGet:
+            #            path: /
+            #            port: web
