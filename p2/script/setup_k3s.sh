@@ -5,24 +5,26 @@ set -e
 echo "SETUP_K3S: Disabling ufw..."
 sudo ufw disable
 
+sudo apt install w3m -y
+
 echo "SETUP_K3S: Installing k3s..."
 curl -sfL https://get.k3s.io | sh -s
 echo "SETUP_K3S: Installed k3s"
 echo "SETUP_K3S: Creating p2 namespace"
 sudo kubectl create namespace p2
 echo "SETUP_K3S: Deploying app1"
-sudo kubectl create -f /vagrant_shared/helloworld.yaml
+sudo kubectl create -f /vagrant_shared/app1.yaml
 echo "SETUP_K3S: Waiting for helloworld deployement to be available..."
-sudo kubectl wait --for=condition=Available deployment/helloworld -n p2 --timeout=380s
+sudo kubectl wait --for=condition=Available deployment/app1 -n p2 --timeout=380s
 echo "SETUP_K3S: Waiting for pod1 to be ready..."
-sudo kubectl wait --for=condition=Ready pod -l app=helloworld -n p2 --timeout=380s
+sudo kubectl wait --for=condition=Ready pod -l app=app1 -n p2 --timeout=380s
 echo "SETUP_K3S: Checking deployment status..."
-sudo kubectl get deployment helloworld -n p2
+sudo kubectl get deployment app1 -n p2
 echo "SETUP_K3S: Exposing app1 with ClusterIP"
-sudo kubectl expose deployment helloworld --type=ClusterIP --name=app1-service --port=8080 --target-port=8080 -n p2
+sudo kubectl expose deployment app1 --type=ClusterIP --name=app1-service --port=8080 --target-port=8080 -n p2
 echo "SETUP_K3S: Creating load balancer for app1"
-sudo kubectl expose deployment helloworld --type=LoadBalancer --name=app1-service-loadbalancing --port=8080 --target-port=8080 -n p2
+sudo kubectl expose deployment app1 --type=LoadBalancer --name=app1-service-loadbalancing --port=8080 --target-port=8080 -n p2
 echo "SETUP_K3S: Port forwarding app1"
-sudo kubectl port-forward deployment/helloworld 8080:8080 -n p2 &
+sudo kubectl port-forward deployment/app1 8080:8080 -n p2 &
 echo "SETUP_K3S: Services created:"
 sudo kubectl get services -n p2
