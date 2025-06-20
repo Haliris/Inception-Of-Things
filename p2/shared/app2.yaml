@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app1
+  name: app2
   namespace: p2
 spec:
   selector:
     matchLabels:
-      app: app1
-  replicas: 1
+      app: app2
+  replicas: 3
   template:
     metadata:
       labels:
-        app: app1
+        app: app2
     spec:
       containers:
-      - name: app1
-        image: haliris/app1
+      - name: app2
+        image: haliris/app2
         imagePullPolicy: Always
         ports:
         - containerPort: 80
