@@ -1,11 +1,10 @@
 #!/bin/bash
 
-set -e
+DOCKER_VERSION=$(docker --version 2>/dev/null)
+K3D_VERSION=$(k3d version 2>/dev/null)
+KUBECTL_VERSION=$(kubectl --version 2>/dev/null)
 
-DOCKER_VERSION=$(docker --version)
-K3D_VERSION=$(k3d version)
-KUBECTL_VERSIOn=$(kubectl --version)
-
+set -euo pipefail 
 if [[ -n $K3D_VERSION ]]; then
 	echo "INSTALL_K3D: K3D already installed."
 	exit 0
@@ -14,10 +13,10 @@ fi
 if [[ -z $DOCKER_VERSION ]]; then
 	echo "INSTALL_K3D: Installing Docker..."
 	echo "INSTALL_K3D: Removing conflicting packages..."
-	for pkg in  docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+	for pkg in  docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove -y "$pkg"; done
 	echo "INSTALL_K3D: Setting up Docker's apt repos..."
 	sudo apt-get update
-	sudo apt-get install ca-certificates curl
+	sudo apt-get install ca-certificates curl -y
 	sudo install -m 0755 -d /etc/apt/keyrings
 	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 	sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -47,4 +46,7 @@ fi
 
 echo "INSTALL_K3D: Installing k3d..."
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+echo "INSTALL_K3D: Cleaning up"
+rm -f kubectl
+rm -f kubectl.sha256
 echo "INSTALL_K3D: Done!"
