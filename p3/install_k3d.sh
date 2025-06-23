@@ -2,7 +2,7 @@
 
 DOCKER_VERSION=$(docker --version 2>/dev/null)
 K3D_VERSION=$(k3d version 2>/dev/null)
-KUBECTL_VERSION=$(kubectl --version 2>/dev/null)
+KUBECTL_VERSION=$(kubectl version 2>/dev/null)
 
 set -euo pipefail 
 
@@ -25,6 +25,8 @@ if [[ -z $DOCKER_VERSION ]]; then
 	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 	echo "INSTALL_K3D: Testing Docker install..."
 	sudo docker run hello-world
+else
+	echo "INSTALL_K3D: Docker already installed"
 fi
 
 if [[ -z $KUBECTL_VERSION ]]; then
@@ -38,6 +40,8 @@ if [[ -z $KUBECTL_VERSION ]]; then
 	sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 	echo "INSTALL_K3D: Installing kubectl install"
 	kubectl version --client
+else
+	echo "INSTALL_K3D: Kubectl already installed"
 fi
 
 if [[ -n $K3D_VERSION ]]; then
