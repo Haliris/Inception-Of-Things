@@ -16,4 +16,13 @@ sudo argocd login $ARGOCD_SERVER \
 sudo argocd account update-password \
 	--current-password "$DEFAULT_PASSWORD" \
 	--new-password "$ARGOCD_PASSWORD"
-echo "CONFIGURE_ARGOCD: Done."
+
+echo "CONFIGURE_ARGOCD: Adding app repo"
+sudo argocd repo add git@github.com:Haliris/iot_p3_showcase.git \
+	--ssh-private-key-path ~/.ssh/id_rsa
+sudo argocd repo list
+
+echo "CONFIGURE_ARGOCD: Creating app"
+sudo argocd app create wilapp --repo git@github.com:Haliris/iot_p3_showcase.git --path . --dest-server https://kubernetes.default.svc --dest-namespace dev
+
+echo "CONFIGURE_ARGOCD: Done"
