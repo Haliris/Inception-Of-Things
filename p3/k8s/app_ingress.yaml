@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: wil-app-ingress
   namespace: dev
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
     - host: wil-app.localhost
       http:
@@ -14,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: wil-service
+                name: wil-app-service
                 port:
                   number: 8888
