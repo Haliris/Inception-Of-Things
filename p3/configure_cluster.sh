@@ -5,7 +5,7 @@ set -e
 echo "CONFIGURE_CLUSTER: Checking dependencies..."
 bash install_k3d.sh
 echo "CONFIGURE_CLUSTER: Creating cluster"
-sudo k3d cluster create mycluster -p "8080:80@loadbalancer" -p "80:8888@loadbalancer"
+sudo k3d cluster create mycluster -p "8080:443@loadbalancer" -p "80:8888@loadbalancer"
 
 echo "CONFIGURE_CLUSTER: Installing Argo CD..."
 sudo kubectl create namespace argocd
