@@ -4,7 +4,6 @@ metadata:
   name: wil-app-ingress
   namespace: dev
 spec:
-  ingressClassName: nginx
   rules:
     - host: wil-app.localhost
       http:

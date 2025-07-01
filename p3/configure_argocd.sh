@@ -9,6 +9,7 @@ sudo kubectl config set-context --current --namespace=argocd
 echo "CONFIGURE_ARGOCD: Setting password"
 DEFAULT_PASSWORD=$(sudo argocd admin initial-password -n argocd)
 DEFAULT_PASSWORD=${DEFAULT_PASSWORD%%$'\n'*}
+echo "CONFIGURE_ARGOCD: CONNECTING TO $ARGOCD_SERVER"
 sudo argocd login $ARGOCD_SERVER \
 	--username admin \
 	--password "$DEFAULT_PASSWORD" \
