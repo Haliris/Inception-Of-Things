@@ -18,11 +18,14 @@ sudo argocd account update-password \
 	--new-password "$ARGOCD_PASSWORD"
 
 echo "CONFIGURE_ARGOCD: Adding app repo"
-sudo argocd repo add git@github.com:Haliris/iot_p3_showcase.git \
+sudo argocd repo add git@github.com:Haliris/Inception-Of-Things.git \
 	--ssh-private-key-path ~/.ssh/id_rsa
 sudo argocd repo list
 
 echo "CONFIGURE_ARGOCD: Creating app"
-sudo argocd app create wilapp --repo git@github.com:Haliris/iot_p3_showcase.git --path . --dest-server https://kubernetes.default.svc --dest-namespace dev
+sudo argocd app create wilapp --repo git@github.com:Haliris/Inception-Of-Things.git --path ./p3/k8s --dest-server https://kubernetes.default.svc --dest-namespace dev
+sudo argocd app set wilapp --sync-policy automated
+sudo argocd app set wilapp --self-heal
+
 
 echo "CONFIGURE_ARGOCD: Done"
