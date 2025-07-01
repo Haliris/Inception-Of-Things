@@ -13,17 +13,16 @@ echo "CONFIGURE_ARGOCD: CONNECTING TO $ARGOCD_SERVER"
 sudo argocd login $ARGOCD_SERVER \
 	--username admin \
 	--password "$DEFAULT_PASSWORD" \
-	--insecure \
-	--grcp-web
+	--grpc-web \
+	--insecure
+
 sudo argocd account update-password \
 	--current-password "$DEFAULT_PASSWORD" \
 	--new-password "$ARGOCD_PASSWORD" \
-	--grcp-web
 
 echo "CONFIGURE_ARGOCD: Adding app repo"
 sudo argocd repo add git@github.com:Haliris/Inception-Of-Things.git \
 	--ssh-private-key-path ~/.ssh/id_rsa \
-	--grcp-web
 
 echo "CONFIGURE_ARGOCD: Creating app"
 sudo argocd app create wilapp \
@@ -31,7 +30,6 @@ sudo argocd app create wilapp \
        	--path ./p3/k8s \
 	--dest-server https://kubernetes.default.svc \
        	--dest-namespace dev \
-	--grcp-web
 
 sudo argocd app set wilapp --sync-policy automated
 sudo argocd app set wilapp --self-heal
