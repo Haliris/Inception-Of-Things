@@ -16,5 +16,3 @@ spec:
                 name: wil-app-service
                 port:
                   number: 8888
-status:
-  loadBalancer: {"Assumed healthy"}

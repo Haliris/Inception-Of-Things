@@ -27,5 +27,4 @@ sudo argocd app create wilapp --repo git@github.com:Haliris/Inception-Of-Things.
 sudo argocd app set wilapp --sync-policy automated
 sudo argocd app set wilapp --self-heal
 
-
 echo "CONFIGURE_ARGOCD: Done"
