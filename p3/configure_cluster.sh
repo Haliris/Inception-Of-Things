@@ -28,6 +28,8 @@ sudo kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 echo "CONFIGURE_CLUSTER: Configuring Argo CD..."
 bash ./configure_argocd.sh
 
+echo "CONFIGURE_CLUSTER: Waiting for wil-app pods..."
+sudo kubectl wait --for=condition=Ready pods --all -n dev --timeout=380s
 sudo kubectl port-forward svc/wil-app-service -n dev 8888:80 &
 
 echo "CONFIGURE_CLUSTER: Done!"
