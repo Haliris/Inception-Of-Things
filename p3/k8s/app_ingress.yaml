@@ -14,4 +14,4 @@ spec:
               service:
                 name: wil-app-service
                 port:
-                  number: 8888
+                  number: 80

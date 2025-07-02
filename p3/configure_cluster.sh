@@ -28,6 +28,6 @@ sudo kubectl port-forward svc/argocd-server -n argocd 8080:443 &
 echo "CONFIGURE_CLUSTER: Configuring Argo CD..."
 bash ./configure_argocd.sh
 
-sudo kubectl port-forward svc/argocd-server -n argocd 8888:80 &
+sudo kubectl port-forward svc/wil-app-service -n dev 8888:80 &
 
 echo "CONFIGURE_CLUSTER: Done!"
